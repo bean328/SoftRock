@@ -17,5 +17,5 @@ lb config noauto \
 	--iso-application "SoftRock" \
 	--iso-publisher "SoftRock" \
 	--iso-volume "SoftRock" \
-	--bootappend-live "boot=live components quiet username=softrock hostname=softrock zswap.enabled=1 zswap.compressor=zstd" \
+	--bootappend-live "boot=live components quiet locales=en_US.UTF-8 username=softrock hostname=softrock zswap.enabled=1 zswap.compressor=zstd" \
 	"${@}"

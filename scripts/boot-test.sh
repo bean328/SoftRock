@@ -26,7 +26,7 @@ echo "Booting $ISO with $ACCEL, timeout ${TIMEOUT}s"
 timeout "$TIMEOUT" qemu-system-x86_64 \
 	-machine q35,accel="$ACCEL" -cpu max -m 4096 -smp 4 \
 	-cdrom "$ISO" -kernel "$WORK/vmlinuz" -initrd "$WORK/initrd.img" \
-	-append "boot=live components username=softrock hostname=softrock console=ttyS0,115200 systemd.show_status=1" \
+	-append "boot=live components locales=en_US.UTF-8 username=softrock hostname=softrock console=ttyS0,115200 systemd.show_status=1" \
 	-vga none -device virtio-vga,xres=1600,yres=900 -display none \
 	-monitor unix:"$MON",server,nowait \
 	-serial file:"$LOG" -no-reboot &
