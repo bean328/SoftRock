@@ -60,12 +60,21 @@ jobs:
         run: |
           docker run --rm --privileged -v "$PWD:/src" -w /src debian:trixie \
             scripts/build-iso.sh /src/out/packages
-      - name: Boot test
+      - name: Boot test and desktop screenshots
         run: |
           sudo apt-get update -qq
-          sudo apt-get install -y -qq qemu-system-x86 xorriso >/dev/null
+          sudo apt-get install -y -qq qemu-system-x86 xorriso socat >/dev/null
           sudo chmod 666 /dev/kvm || true
-          scripts/boot-test.sh out/softrock-amd64.iso 600
+          SCREENSHOTS=1 scripts/boot-test.sh out/softrock-amd64.iso 600
+      - name: Print screenshots into the log
+        if: always()
+        run: |
+          for f in out/screenshots/*.png; do
+            [ -f "$f" ] || continue
+            echo "BEGIN_SCREENSHOT $(basename "$f")"
+            base64 -w 0 "$f"; echo
+            echo "END_SCREENSHOT"
+          done
       - uses: actions/upload-artifact@v4
         if: always()
         with:
@@ -74,6 +83,7 @@ jobs:
             out/softrock-amd64.iso
             out/softrock-amd64.iso.sha256
             out/boot.log
+            out/screenshots/
             build/iso/build.log
           if-no-files-found: ignore
           retention-days: 14
