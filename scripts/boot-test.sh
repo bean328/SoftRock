@@ -1,7 +1,7 @@
 #!/bin/sh
-# Boot the ISO headless in QEMU and pass once systemd reaches the graphical
-# target with greetd running. Hyprland itself needs a GPU, so this checks
-# everything up to the session.
+# Boot the ISO headless in QEMU and pass once greetd is running and has
+# started the live user's session (autologin). Hyprland itself needs a GPU,
+# so this checks everything up to the desktop.
 # Usage: scripts/boot-test.sh [iso] [timeout seconds]
 set -eu
 
@@ -29,7 +29,9 @@ QEMU=$!
 ok=0
 elapsed=0
 while kill -0 "$QEMU" 2>/dev/null; do
-	if grep -q "Started greetd" "$LOG" 2>/dev/null && grep -q "Reached target.*Graphical Interface" "$LOG" 2>/dev/null; then
+	# systemd colors its status lines, so strip the escape codes before matching.
+	sed 's/\x1b\[[0-9;]*m//g' "$LOG" > "$WORK/plain.log" 2>/dev/null || true
+	if grep -q "Started greetd.service" "$WORK/plain.log" && grep -q "Created slice user-1000.slice" "$WORK/plain.log"; then
 		ok=1
 		break
 	fi
@@ -41,8 +43,8 @@ kill "$QEMU" 2>/dev/null || true
 echo "---- last lines of serial log ----"
 tail -n 40 "$LOG" || true
 if [ "$ok" = 1 ]; then
-	echo "PASS: reached graphical target with greetd in about ${elapsed}s"
+	echo "PASS: greetd started the live session in about ${elapsed}s"
 	exit 0
 fi
-echo "FAIL: did not reach graphical target with greetd"
+echo "FAIL: greetd did not start the live session"
 exit 1
