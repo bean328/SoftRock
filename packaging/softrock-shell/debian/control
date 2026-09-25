@@ -1,0 +1,15 @@
+Source: softrock-shell
+Section: x11
+Priority: optional
+Maintainer: SoftRock Project <bean328@users.noreply.github.com>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.0
+Homepage: https://github.com/bean328/SoftRock
+Rules-Requires-Root: no
+
+Package: softrock-shell
+Architecture: all
+Depends: ${misc:Depends}, quickshell (>= 0.3), upower, qml6-module-qtquick-layouts
+Description: SoftRock desktop shell
+ The top bar, workspaces, clock and status indicators of the SoftRock
+ desktop, written in QML for Quickshell.

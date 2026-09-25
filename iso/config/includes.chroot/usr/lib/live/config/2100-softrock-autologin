@@ -1,0 +1,22 @@
+#!/bin/sh
+# Live session only: log the live user straight into SoftRock.
+# Installed systems never run live-config scripts, so they keep the normal greeter.
+set -e
+
+user=softrock
+read -r cmdline < /proc/cmdline
+# shellcheck disable=SC2086
+for arg in $cmdline; do
+	case "$arg" in
+		username=*) user="${arg#username=}" ;;
+	esac
+done
+
+if ! grep -q '^\[initial_session\]' /etc/greetd/config.toml; then
+	cat >> /etc/greetd/config.toml <<CONF
+
+[initial_session]
+command = "/usr/bin/softrock-session"
+user = "$user"
+CONF
+fi

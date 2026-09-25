@@ -1,0 +1,2 @@
+shell/*.qml usr/share/softrock/shell/
+shell/softrock-shell usr/bin/

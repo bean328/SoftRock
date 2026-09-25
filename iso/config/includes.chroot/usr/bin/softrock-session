@@ -1,0 +1,7 @@
+#!/bin/sh
+# Start the SoftRock desktop session.
+# Hyprland recommends its own launcher (crash recovery, safe mode) when available.
+if command -v start-hyprland >/dev/null 2>&1; then
+	exec start-hyprland
+fi
+exec Hyprland

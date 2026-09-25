@@ -1,0 +1,78 @@
+# SoftRock Phase 0 package set. Recommends are off, so everything needed is listed.
+# The kernel comes from lb (linux-flavours) and all firmware from firmware-chroot.
+
+# Live system
+live-boot
+live-config
+live-config-systemd
+systemd-sysv
+systemd-oomd
+dbus-broker
+sudo
+locales
+console-setup
+keyboard-configuration
+user-setup
+intel-microcode
+amd64-microcode
+
+# Graphics
+mesa-vulkan-drivers
+libgl1-mesa-dri
+libegl1
+mesa-va-drivers
+intel-media-va-driver
+
+# Session
+hyprland
+xwayland
+xdg-desktop-portal-hyprland
+xdg-desktop-portal-gtk
+greetd
+polkitd
+lxpolkit
+upower
+qt6-wayland
+fuzzel
+mako-notifier
+grim
+slurp
+wl-clipboard
+brightnessctl
+
+# Audio, network, power
+pipewire
+pipewire-pulse
+pipewire-alsa
+wireplumber
+network-manager
+iwd
+bluez
+power-profiles-daemon
+
+# Apps
+foot
+thunar
+firefox-esr
+flatpak
+xdg-user-dirs
+
+# Fonts (Figtree and Lexend are added by scripts/fetch-fonts.sh)
+fontconfig
+fonts-jetbrains-mono
+fonts-noto-core
+fonts-noto-color-emoji
+
+# Storage and installer
+btrfs-progs
+snapper
+dosfstools
+e2fsprogs
+calamares
+calamares-settings-debian
+
+# Basics
+ca-certificates
+curl
+less
+nano

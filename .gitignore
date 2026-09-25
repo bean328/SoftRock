@@ -1,0 +1,5 @@
+/build/
+/out/
+__pycache__/
+iso/config/packages.chroot/*.deb
+iso/config/includes.chroot/usr/share/fonts/truetype/softrock/

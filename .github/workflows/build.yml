@@ -1,0 +1,79 @@
+name: Build SoftRock
+
+on:
+  push:
+    branches: [main, "claude/**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - uses: actions/checkout@v4
+      - name: Tools
+        run: apt-get update -qq && apt-get install -y -qq --no-install-recommends python3 shellcheck make >/dev/null
+      - name: Design tokens and generated files
+        run: make test
+      - name: Shellcheck
+        run: make shellcheck
+      - name: Package list resolves on Debian 13
+        run: scripts/check-packages.sh
+      - name: Hyprland config and QML parse
+        run: scripts/check-configs.sh
+
+  packages:
+    name: Packages
+    runs-on: ubuntu-latest
+    container: debian:trixie
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build Quickshell and SoftRock Shell
+        run: scripts/build-packages.sh out/packages
+      - uses: actions/upload-artifact@v4
+        with:
+          name: softrock-packages
+          path: out/packages/*.deb
+
+  iso:
+    name: ISO
+    needs: [checks, packages]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+          sudo docker image prune --all --force
+          df -h /
+      - uses: actions/download-artifact@v4
+        with:
+          name: softrock-packages
+          path: out/packages
+      - name: Build ISO in Debian 13
+        run: |
+          docker run --rm --privileged -v "$PWD:/src" -w /src debian:trixie \
+            scripts/build-iso.sh /src/out/packages
+      - name: Boot test
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq qemu-system-x86 xorriso >/dev/null
+          sudo chmod 666 /dev/kvm || true
+          scripts/boot-test.sh out/softrock-amd64.iso 1200
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: softrock-iso
+          path: |
+            out/softrock-amd64.iso
+            out/softrock-amd64.iso.sha256
+            out/boot.log
+            build/iso/build.log
+          if-no-files-found: ignore
+          retention-days: 14

@@ -1,0 +1,5 @@
+# SoftRock takes every package that Debian backports from trixie-backports:
+# the newer kernel, firmware and Hyprland stack are built to work together.
+Package: *
+Pin: release n=trixie-backports
+Pin-Priority: 500

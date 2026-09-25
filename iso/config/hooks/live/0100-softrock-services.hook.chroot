@@ -1,0 +1,17 @@
+#!/bin/sh
+# Enable what SoftRock needs at boot and nothing more.
+set -e
+
+systemctl set-default graphical.target
+systemctl enable greetd.service
+systemctl enable NetworkManager.service
+systemctl enable systemd-oomd.service
+systemctl enable power-profiles-daemon.service
+systemctl enable bluetooth.service
+
+# dbus broker replaces the reference D-Bus daemon for system and user buses.
+systemctl enable dbus-broker.service
+systemctl --global enable dbus-broker.service
+
+# Nothing on the desktop should wait for the network before booting.
+systemctl mask NetworkManager-wait-online.service

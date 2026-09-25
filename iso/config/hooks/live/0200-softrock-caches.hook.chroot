@@ -1,0 +1,10 @@
+#!/bin/sh
+# Build caches ahead of time so the first login is as fast as every other one.
+set -e
+
+fc-cache -f
+for theme in /usr/share/icons/*/; do
+	if [ -f "${theme}index.theme" ]; then
+		gtk-update-icon-cache -f -q "$theme" 2>/dev/null || true
+	fi
+done
