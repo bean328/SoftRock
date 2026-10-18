@@ -87,9 +87,18 @@ if [ "$ok" = 1 ] && [ "${SCREENSHOTS:-0}" = 1 ]; then
 	monitor "sendkey ret"
 	sleep 3
 	shot 3-terminal
+	type_text "sudo softrock-memreport --serial"
+	monitor "sendkey ret"
+	sleep 6
+	shot 4-memreport
 fi
 
 kill "$QEMU" 2>/dev/null || true
+
+if grep -q "SoftRock memory report" "$LOG" 2>/dev/null; then
+	echo "---- memory report ----"
+	sed -n '/== SoftRock memory report ==/,/== end of memory report ==/p' "$LOG" | tr -d '\r'
+fi
 
 echo "---- last lines of serial log ----"
 tail -n 40 "$LOG" || true

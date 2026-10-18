@@ -12,7 +12,7 @@ test:
 
 shellcheck:
 	shellcheck -s sh scripts/*.sh shell/softrock-shell iso/auto/* iso/config/hooks/live/*.chroot \
-		iso/config/includes.chroot/usr/bin/softrock-session \
+		iso/config/includes.chroot/usr/bin/softrock-session iso/config/includes.chroot/usr/bin/softrock-memreport \
 		iso/config/includes.chroot/usr/lib/live/config/*
 
 lint: test shellcheck

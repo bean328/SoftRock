@@ -1,0 +1,26 @@
+#!/bin/sh
+# Show where memory goes: system totals from the kernel, then the
+# proportional set size (PSS) of every program, largest first.
+# Run as root to see every process. With --serial the report is also
+# written to the first serial port, which the emulator test reads.
+set -eu
+
+report() {
+	echo "== SoftRock memory report =="
+	grep -E '^(MemTotal|MemFree|MemAvailable|Buffers|Cached|Shmem|AnonPages|Slab|SReclaimable|SUnreclaim|KernelStack|PageTables|Zswap|Zswapped):' /proc/meminfo
+	echo "== PSS by program, MB =="
+	for d in /proc/[0-9]*; do
+		[ -r "$d/smaps_rollup" ] || continue
+		pss=$(awk '/^Pss:/ {print $2}' "$d/smaps_rollup" 2>/dev/null) || continue
+		[ -n "$pss" ] || continue
+		name=$(cat "$d/comm" 2>/dev/null) || continue
+		echo "$pss $name"
+	done | awk '{ s[$2] += $1; t += $1 } END { for (n in s) printf "%8.1f %s\n", s[n] / 1024, n; printf "%8.1f TOTAL\n", t / 1024 }' \
+		| sort -rn | head -n 30
+	echo "== end of memory report =="
+}
+
+if [ "${1:-}" = "--serial" ] && [ -w /dev/ttyS0 ]; then
+	report > /dev/ttyS0
+fi
+report
