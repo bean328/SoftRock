@@ -91,6 +91,10 @@ if [ "$ok" = 1 ] && [ "${SCREENSHOTS:-0}" = 1 ]; then
 	monitor "sendkey ret"
 	sleep 6
 	shot 4-memreport
+	type_text "notify-send SoftRock Hello"
+	monitor "sendkey ret"
+	sleep 3
+	shot 5-notification
 fi
 
 kill "$QEMU" 2>/dev/null || true

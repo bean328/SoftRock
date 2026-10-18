@@ -3,7 +3,7 @@
 
 Every color, radius and tier setting the desktop uses comes from tokens.json.
 This script turns it into the formats each component reads: a QML singleton
-for SoftRock Shell, Hyprland config snippets, GTK CSS and a Foot config.
+for SoftRock Shell, Hyprland config snippets, GTK CSS and configs for Foot and Fuzzel.
 
 Usage:
     generate.py           write all generated files
@@ -221,28 +221,6 @@ def fuzzel_ini(t):
     ]) + "\n"
 
 
-def mako_config(t):
-    c = {k: v["dark"] for k, v in t["colors"].items()}
-    return "\n".join([
-        f"# {HEADER}",
-        f"font={t['font']['ui']} 11",
-        f"background-color={c['surface']}",
-        f"text-color={c['text']}",
-        f"border-color={c['border']}",
-        f"progress-color=over {c['accent']}",
-        f"border-radius={t['radius']['medium']}",
-        "border-size=1",
-        f"padding={t['spacing']['m']}",
-        f"margin={t['spacing']['m']}",
-        "width=360",
-        "default-timeout=5000",
-        "",
-        "[urgency=critical]",
-        f"border-color={c['bad']}",
-        "default-timeout=0",
-    ]) + "\n"
-
-
 def outputs(t):
     """Map of output path -> file content."""
     files = {
@@ -252,7 +230,6 @@ def outputs(t):
         SKEL / "gtk-4.0" / "gtk.css": gtk_css(t, gtk4=True),
         SKEL / "foot" / "foot.ini": foot_ini(t),
         SKEL / "fuzzel" / "fuzzel.ini": fuzzel_ini(t),
-        SKEL / "mako" / "config": mako_config(t),
     }
     for tier in t["tiers"]:
         files[SHARE / "hypr" / f"tier-{tier}.conf"] = hypr_tier(t, tier)

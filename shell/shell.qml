@@ -3,13 +3,22 @@ import Quickshell
 import QtQuick
 
 ShellRoot {
-    // One bar per connected screen; bars appear and disappear with monitors.
+    // One bar and one dock per connected screen; they follow monitors.
     Variants {
         model: Quickshell.screens
 
-        Bar {
+        Scope {
+            id: perScreen
             required property var modelData
-            screen: modelData
+
+            Bar {
+                screen: perScreen.modelData
+            }
+            Dock {
+                screen: perScreen.modelData
+            }
         }
     }
+
+    Notifications {}
 }

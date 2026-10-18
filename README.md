@@ -15,7 +15,7 @@ SoftRock is a Debian based Linux desktop that aims to look better than anything 
 ## What is inside
 
 * **Base:** Debian 13 trixie, with the newer kernel, firmware and Hyprland from trixie backports
-* **Desktop:** Hyprland, SoftRock Shell on Quickshell 0.3, greetd, Fuzzel launcher, Mako notifications
+* **Desktop:** Hyprland, SoftRock Shell on Quickshell 0.3, greetd, Fuzzel launcher (SoftRock Shell draws the bar, dock and notifications)
 * **System:** PipeWire, NetworkManager on iwd, BlueZ, power profiles daemon, dbus broker, systemd oomd
 * **Memory:** zswap in front of disk swap, multi generational LRU, oomd limits on user sessions
 * **Apps:** Firefox ESR, Thunar, Foot, Flatpak
@@ -66,7 +66,7 @@ To install, open the launcher and search for **Install**.
 
 ## Design
 
-All colors, radii, spacing, fonts and the three visual tiers (Lite, Standard, Ultra) live in `design/tokens.json`. `make tokens` turns them into the QML theme, Hyprland snippets, GTK colors, and the Foot, Fuzzel and Mako configs. Edit the tokens, never the generated files.
+All colors, radii, spacing, fonts and the three visual tiers (Lite, Standard, Ultra) live in `design/tokens.json`. `make tokens` turns them into the QML theme, Hyprland snippets, GTK colors, and the Foot and Fuzzel configs. Edit the tokens, never the generated files.
 
 ## License
 

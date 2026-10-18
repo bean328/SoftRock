@@ -34,7 +34,7 @@ lxpolkit
 upower
 qt6-wayland
 fuzzel
-mako-notifier
+libnotify-bin
 grim
 slurp
 wl-clipboard
